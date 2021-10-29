@@ -21,9 +21,22 @@ class ContentFactory extends Factory
      */
     public function definition()
     {
+        $title = $this->faker->sentence;
+
         return [
-            'title' => $this->faker->sentence,
-            'body' => $this->faker->sentence
+            'title' => $title,
+            'description' => $this->faker->sentence,
+            'body' => $this->faker->paragraphs(5, true),
+            'slug' => \Illuminate\Support\Str::slug($title),
+            'type' => 1,
+            'cover' => $this->faker->imageUrl(1920, 1080)
         ];
+    }
+
+    public function contentSeries()
+    {
+        return $this->state([
+            'type' => 2
+        ]);
     }
 }

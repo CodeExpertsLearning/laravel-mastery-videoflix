@@ -30,6 +30,8 @@ Route::middleware(['auth'])->prefix('/content')->name('content.')->group(functio
 
     Route::get('/{content}', \App\Http\Livewire\Content\Edit::class)->name('edit');
 
+    Route::get('/{content}/videos/create', \App\Http\Livewire\Content\VideoCreate::class)->name('video.create');
+
 });
 
 require __DIR__.'/auth.php';

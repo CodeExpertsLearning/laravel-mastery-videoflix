@@ -9,7 +9,10 @@ class Video extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description', 'video','thumb', 'slug'];
+    protected $fillable = [
+        'name', 'description', 'video',
+        'thumb', 'slug', 'code', 'is_processed', 'processed_video', 'progress'
+    ];
 
     public function content()
     {

@@ -2,6 +2,9 @@
 
 namespace App\Http\Livewire\Content;
 
+use App\Jobs\CreateThumbFromAVideoJob;
+use App\Jobs\VideoProcessingJob;
+use Ramsey\Uuid\Uuid;
 use Livewire\{
     WithFileUploads,
     Component
@@ -32,12 +35,16 @@ class VideoCreate extends Component
         foreach ($videosUploadedFile as $videoUploaded) {
             $video = [
                 'name' => $videoUploaded->getClientOriginalName(),
-                'video' => $videoUploaded->store('videos', 'public'),
+                'video' => $videoUploaded->store('', 'videos'),
                 'slug'  => \Illuminate\Support\Str::slug($videoUploaded->getClientOriginalName()),
-                'thumb' => 'image.png'
+                'thumb' => 'image.png',
+                'code'  => Uuid::uuid4()
             ];
 
-            $this->content->videos()->create($video);
+            $video = $this->content->videos()->create($video);
+
+            CreateThumbFromAVideoJob::dispatch($video);
+            VideoProcessingJob::dispatch($video);
         }
     }
 

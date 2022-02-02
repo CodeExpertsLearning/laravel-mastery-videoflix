@@ -13,6 +13,23 @@ class Content extends Model
 
     public function videos()
     {
-        return $this->hasMany(Video::class);
+        return $this->hasMany(Video::class)
+                    ->whereNotNull('code')
+                    ->whereNotNull('processed_video');
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function tags()
+    {
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 }

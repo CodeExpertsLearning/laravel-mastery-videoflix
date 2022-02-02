@@ -17,20 +17,18 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     @livewireStyles
-
-    @stack('head')
 </head>
 
-<body class="font-sans antialiased bg-black">
-<div class="bg-black">
+<body class="font-sans antialiased">
+<div class="min-h-screen bg-black">
+@include('layouts.my-navigation')
 
+<!-- Page Content -->
     <main>
         {{ $slot }}
     </main>
 </div>
 
 @livewireScripts
-
-@stack('scripts')
 </body>
 </html>

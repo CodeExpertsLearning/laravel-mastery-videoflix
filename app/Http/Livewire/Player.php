@@ -2,21 +2,27 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Video;
 use Livewire\Component;
+use App\Models\Content;
 
 class Player extends Component
 {
-    public $video;
+    public $videos;
+    public $content;
 
-    public function mount(Video $video)
+    public $current;
+
+    public function mount(Content $content)
     {
-        $this->video = $video;
+        $this->content = $content;
+        $this->videos = $content->videos->toArray();
+
+        if($content->type == 2)
+            $this->current = $this->videos[0]['code'] . '/' . $this->videos[0]['processed_video'];
     }
 
     public function render()
     {
-        return view('livewire.player')
-            ->layout('layouts.player-base');
+        return view('livewire.player')->layout('layouts.player-base');
     }
 }

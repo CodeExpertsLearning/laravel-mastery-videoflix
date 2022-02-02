@@ -42,10 +42,13 @@ Route::middleware(['auth'])->prefix('/content')->name('content.')->group(functio
     Route::get('/{content}/videos/edit/{video}', \App\Http\Livewire\Content\Video\EditVideo::class)->name('video.edit');
 });
 
-Route::get('/watch/{video:code}',\App\Http\Livewire\Player::class)
+Route::get('/watch/{content:slug}',\App\Http\Livewire\Player::class)
     ->middleware('auth')
     ->name('video.player');
 
+Route::middleware(['auth'])->prefix('my-contents')->name('my-content.')->group(function(){
+    Route::get('/', \App\Http\Livewire\Contents::class)->name('main');
+});
 
 Route::get('resources/{code}/{video}', function($code, $video = null) {
     $video = $code . '/' . $video;
@@ -70,3 +73,67 @@ Route::get('/notification', function() {
     //dd($user->unreadNotifications()->where('id', "6d30233b-8061-4b62-b716-48fc82368884")->first()->markAsRead());
     dd($user->readNotifications);
 });
+
+
+Route::get('/morphs', function(){
+    //Morphs 1 to 1
+
+    //Find User
+    //$user = \App\Models\User::find(1);
+
+    //Find Content
+    //$content = \App\Models\Content::find(10);
+    //return $content->image;
+
+    //Saving the morphOne relation
+    //$content->image()->create(['image' => 'image-' . rand(1, 30000)]);
+
+    //Searching a image morphs
+    //$image = \App\Models\Image::find(2);
+
+    //return $image->imageable;
+
+    //Morphs 1 to Many
+
+    //Find Content
+//    $content = \App\Models\Content::find(10);
+//    $content->comments()->create(['comment' => 'Testando comentário...']);
+
+
+//    $video = \App\Models\Video::find(10);
+//    $video->comments()->create(['comment' => 'Testando comentário v...']);
+
+//    return \App\Models\Comment::first()->commentable;
+//    return $video->comments;
+
+    //Many To Many Morphs
+
+    $tagsCreate = [
+        ['tag' => 'acao'],
+        ['tag' => 'aventura'],
+        ['tag' => 'terror'],
+        ['tag' => 'documentarios'],
+        ['tag' => 'romance'],
+        ['tag' => 'suspense'],
+    ];
+
+   // \App\Models\Tag::createMany($tagsCreate);
+
+    //$model = \App\Models\Video::find(10);
+
+    //$model->tags()->createMany($tagsCreate);
+
+   //$model = \App\Models\Content::find(10);
+
+    $model = \App\Models\Tag::find(1);
+    //$model->videos()->sync([1,2,3,4]);
+
+    //$model->tags()->sync([1,2,3,4]);
+
+    return $model->contents;
+});
+
+
+
+
+

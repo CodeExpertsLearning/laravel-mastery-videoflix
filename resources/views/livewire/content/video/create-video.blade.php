@@ -34,5 +34,4 @@
             <button wire:click.prevent="uploadVideos" class="px-8 py-5 rounded mt-16 border border-green-600 bg-green-800 hover:bg-green-400 text-white font-extrabold">Carregar Videos</button>
         </div>
     </form>
-
 </div>

@@ -13,8 +13,6 @@ class Content extends Model
 
     public function videos()
     {
-        if($this->type == 1) return $this->hasOne(Video::class);
-
         return $this->hasMany(Video::class);
     }
 }

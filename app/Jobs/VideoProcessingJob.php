@@ -64,5 +64,14 @@ class VideoProcessingJob implements ShouldQueue
             'processed_video' => $nameNewVideo,
             'is_processed' => true
         ]);
+
+        $user = \App\Models\User::first(); //To-DO: Pegar os usuarios com papel ADMIN
+        $user->notify(new \App\Notifications\VideoProcessedNotification($this->video));
+    }
+
+    public function failed(\Throwable $exception)
+    {
+        $user = \App\Models\User::first(); //To-DO: Pegar os usuarios com papel ADMIN
+        $user->notify(new \App\Notifications\WhenVideoProcessingHasFailedNotification($this->video, $exception));
     }
 }

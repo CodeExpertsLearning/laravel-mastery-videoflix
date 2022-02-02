@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Http\Livewire\Content;
+namespace App\Http\Livewire\Content\Video;
 
 use App\Jobs\CreateThumbFromAVideoJob;
 use App\Jobs\VideoProcessingJob;
-use Ramsey\Uuid\Uuid;
-use Livewire\{
-    WithFileUploads,
-    Component
-};
 use App\Models\Content;
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Ramsey\Uuid\Uuid;
 
-
-class VideoCreate extends Component
+class CreateVideo extends Component
 {
     use WithFileUploads;
 
@@ -45,11 +42,12 @@ class VideoCreate extends Component
 
             CreateThumbFromAVideoJob::dispatch($video);
             VideoProcessingJob::dispatch($video);
+
+            return redirect()->route('content.video.list', $this->content);
         }
     }
-
     public function render()
     {
-        return view('livewire.content.video-create');
+        return view('livewire.content.video.create-video');
     }
 }

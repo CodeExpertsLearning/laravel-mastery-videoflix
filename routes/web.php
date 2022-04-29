@@ -42,6 +42,8 @@ Route::middleware(['auth'])->prefix('/content')->name('content.')->group(functio
     Route::get('/{content}/videos/edit/{video}', \App\Http\Livewire\Content\Video\EditVideo::class)->name('video.edit');
 });
 
+Route::get('/subscriptions/checkout', \App\Http\Livewire\Subscriptions\Checkout::class)->name('subscriptions.checkout');
+
 Route::get('/watch/{content:slug}',\App\Http\Livewire\Player::class)
     ->middleware('auth')
     ->name('video.player');

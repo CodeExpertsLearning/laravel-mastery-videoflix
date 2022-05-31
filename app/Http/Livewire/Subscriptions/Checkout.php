@@ -9,20 +9,25 @@ class Checkout extends Component
 {
     protected $listeners = ['charge'];
 
-    public function charge($paymentMethodId)
+    public function getUserProperty()
+    {
+        return auth()->user();
+    }
+
+    public function charge($paymentMethod)
     {
 //        dd($paymentMethodId);
 
-        $user = User::find(1);
+        if(!$this->user->subscribed('default'))
+            $this->user->newSubscription('default', 'price_1Ku1P0HcatQAL5p6ZRqhaUqk')->create($paymentMethod);
 
-        if(!$user->subscribed('default'))
-            $user->newSubscription('default', 'price_1Ku1P0HcatQAL5p6ZRqhaUqk')->create($paymentMethodId);
-
-        return redirect()->route('dashboard');
+        return redirect()->route('my-content.main');
     }
 
     public function render()
     {
-        return view('livewire.subscriptions.checkout')->layout('layouts.guest');
+        return view('livewire.subscriptions.checkout')
+            ->with('intent', $this->user->createSetupIntent())
+            ->layout('layouts.guest');
     }
 }

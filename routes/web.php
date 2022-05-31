@@ -42,15 +42,18 @@ Route::middleware(['auth'])->prefix('/content')->name('content.')->group(functio
     Route::get('/{content}/videos/edit/{video}', \App\Http\Livewire\Content\Video\EditVideo::class)->name('video.edit');
 });
 
-Route::get('/subscriptions/checkout', \App\Http\Livewire\Subscriptions\Checkout::class)->name('subscriptions.checkout');
+Route::get('/subscriptions/checkout', \App\Http\Livewire\Subscriptions\Checkout::class)
+    ->name('subscriptions.checkout')
+    ->middleware('auth');
 
-Route::get('/watch/{content:slug}',\App\Http\Livewire\Player::class)
-    ->middleware('auth')
-    ->name('video.player');
 
-Route::middleware(['auth'])->prefix('my-contents')->name('my-content.')->group(function(){
+Route::middleware(['auth', 'user.active.subscription'])->prefix('my-contents')->name('my-content.')->group(function(){
     Route::get('/', \App\Http\Livewire\Contents::class)->name('main');
 });
+
+Route::get('/watch/{content:slug}',\App\Http\Livewire\Player::class)
+    ->middleware(['auth', 'user.active.subscription'])
+    ->name('video.player');
 
 Route::get('resources/{code}/{video}', function($code, $video = null) {
     $video = $code . '/' . $video;
@@ -62,7 +65,7 @@ Route::get('resources/{code}/{video}', function($code, $video = null) {
                 'isHls' => true
             ]
         );
-})->middleware('auth');
+})->middleware(['auth', 'user.active.subscription']);
 
 require __DIR__.'/auth.php';
 

@@ -4,7 +4,12 @@
         @foreach($contents as $content)
 
             <div class="w-96 mb-8 bg-gray-900 rounded shadow-lg hover:p-4">
-                <img src="{{$content->cover}}" alt="Capa do conteúdo: {{$content->title}}" class="mb-8 rounded-t">
+
+                @if($content->cover)
+                    <img src="{{asset('storage/' . $content->cover)}}" alt="Capa do conteúdo: {{$content->title}}" class="mb-8 rounded-t">
+                @else
+                    <img src="{{asset('images/no-photo.jpg')}}" alt="Capa do conteúdo: {{$content->title}}" class="mb-8 rounded-t">
+                @endif
 
                 <div class="px-4 pb-4 text-white relative h-64">
 

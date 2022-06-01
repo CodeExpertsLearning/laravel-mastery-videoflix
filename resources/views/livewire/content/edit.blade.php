@@ -8,6 +8,11 @@
         </div>
     @endif
 
+    <div class="w-full flex justify-end py-5">
+        <a href="{{route('content.video.list', $content)}}"
+           class="border border-blue-800 bg-blue-600 text-white px-2 py-1 rounded">Editar Vídeos</a>
+    </div>
+
     <form action="" wire:submit.prevent="editContent">
 
         <div class="mb-5">

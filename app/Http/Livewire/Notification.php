@@ -10,6 +10,8 @@ class Notification extends Component
     public function markAsReadNotification(DatabaseNotification $notification)
     {
         $notification->markAsRead();
+
+        $this->emit('refreshNotificationIcon');
     }
 
     public function render()

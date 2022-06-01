@@ -7,9 +7,15 @@
 
     <div id="player" class="mt-14 ml-10" wire:ignore></div>
 
+    <div class="flex justify-start mb-5 mt-10 ml-10">
+        @livewire('favorite-button', ['model' => $videoId, 'type' => 'video'])
+    </div>
+
     <div>
         <livewire:comments.create :video="$videoId"/>
     </div>
+
+
 
     <div class="fixed w-80 h-full top-0 right-0 bg-black border-l border-gray-900">
 

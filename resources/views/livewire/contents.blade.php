@@ -8,6 +8,10 @@
 
                 <div class="px-4 pb-4 text-white relative h-64">
 
+                    <p class="flex justify-end mb-5">
+                        @livewire('favorite-button', ['model' => $content->id, 'type' => 'content'])
+                    </p>
+
                     <h5 class="font-extrabold text-2xl mb-4">{{$content->title}}</h5>
 
                     <p class="leading-4 text-xl mb-20">{{$content->description}}</p>

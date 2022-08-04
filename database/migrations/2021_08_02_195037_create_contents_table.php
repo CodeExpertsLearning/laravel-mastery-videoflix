@@ -25,6 +25,8 @@ class CreateContentsTable extends Migration
             $table->string('cover')->nullable();
             $table->string('slug');
 
+            //$table->boolean('is_active')->default(false);
+
             $table->timestamps();
         });
     }

@@ -11,11 +11,20 @@ class Content extends Model
 
     protected $fillable = ['title', 'description', 'body', 'slug', 'type', 'cover'];
 
+
+
+    //Scope Local
+    public function scopeActiveVideos($query)
+    {
+        return $this->videos()
+            ->whereNotNull('code')
+            ->whereNotNull('processed_video');
+    }
+
+    //Relations
     public function videos()
     {
-        return $this->hasMany(Video::class);
-                    //->whereNotNull('code')
-                    //->whereNotNull('processed_video');
+        return $this->hasMany(Video::class)->orderBy('id', 'ASC');
     }
 
     public function image()

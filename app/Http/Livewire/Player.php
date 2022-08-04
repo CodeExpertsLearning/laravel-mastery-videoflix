@@ -16,7 +16,7 @@ class Player extends Component
     public function mount(Content $content)
     {
         $this->content = $content;
-        $this->videos = $content->videos->toArray();
+        $this->videos = $content->activeVideos()->get()->toArray();
 
         if($content->type == 2) {
             $this->current = $this->videos[0]['code'] . '/' . $this->videos[0]['processed_video'];

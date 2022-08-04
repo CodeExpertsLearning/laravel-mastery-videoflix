@@ -10,6 +10,8 @@ class ListVideo extends Component
     public $videos;
     public $content;
 
+    public $listeners = ['refreshContentListOfVideos' => '$refresh'];
+
     public function mount(Content $content)
     {
         $this->content = $content->id;

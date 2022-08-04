@@ -23,13 +23,14 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})
+    ->middleware(['auth', 'user.is.admin'])->name('dashboard');
 
 Route::get('notifications', \App\Http\Livewire\Notification::class)
-    ->middleware('auth')
+    ->middleware(['auth', 'user.is.admin'])
     ->name('notifications');
 
-Route::middleware(['auth'])->prefix('/content')->name('content.')->group(function(){
+Route::middleware(['auth', 'user.is.admin'])->prefix('/content')->name('content.')->group(function(){
 
     Route::get('/', \App\Http\Livewire\Content\Index::class)->name('index'); //content.index
 
@@ -46,10 +47,28 @@ Route::get('/subscriptions/checkout', \App\Http\Livewire\Subscriptions\Checkout:
     ->name('subscriptions.checkout')
     ->middleware('auth');
 
+Route::get('subscriptions/my-subscription', \App\Http\Livewire\Subscriptions\CustomerSubscription::class)
+    ->name('subscriptions.my-subscription')
+    ->middleware('auth');
 
-Route::middleware(['auth', 'user.active.subscription'])->prefix('my-contents')->name('my-content.')->group(function(){
-    Route::get('/', \App\Http\Livewire\Contents::class)->name('main');
-});
+Route::get('subscriptions/my-subscription/invoice/{invoiceId}', function ($invoiceId) {
+
+    return auth()->user()->downloadInvoice($invoiceId, [
+        'vendor' => 'VIDEO_FLIX',
+        'product' => 'Assinatura VideoFlix',
+    ]);
+
+})
+    ->name('subscriptions.my-subscription.invoice')
+    ->middleware('auth');
+
+
+Route::middleware(['auth', 'user.active.subscription'])
+    ->prefix('my-contents')
+    ->name('my-content.')
+    ->group(function(){
+     Route::get('/', \App\Http\Livewire\Contents::class)->name('main');
+    });
 
 Route::get('/watch/{content:slug}',\App\Http\Livewire\Player::class)
     ->middleware(['auth', 'user.active.subscription'])
@@ -136,6 +155,18 @@ Route::get('/morphs', function(){
     //$model->tags()->sync([1,2,3,4]);
 
     return $model->contents;
+});
+
+Route::get('/filas-chain', function(){
+    \Illuminate\Support\Facades\Bus::chain([
+        new \App\Jobs\Order\ProcessingOrder(),
+        new \App\Jobs\Order\MakePaymentOrder(),
+        new \App\Jobs\Order\NotifyUserAboutPaymentOrder()
+    ])
+    ->catch(function(Throwable $e){
+        dd($e->getMessage());
+    })
+    ->dispatch();
 });
 
 

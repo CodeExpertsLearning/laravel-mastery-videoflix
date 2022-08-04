@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use FFMpeg\Format\Video\X264;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,10 +13,11 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Video;
 use \FFMpeg;
+use Illuminate\Support\Facades\Storage;
 
 class VideoProcessingJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 //    public $tries = 2;
 //    public $backoff = 5;
@@ -65,13 +68,20 @@ class VideoProcessingJob implements ShouldQueue
             'is_processed' => true
         ]);
 
-        $user = \App\Models\User::first(); //To-DO: Pegar os usuarios com papel ADMIN
-        $user->notify(new \App\Notifications\VideoProcessedNotification($this->video));
+        Storage::disk('videos')->delete($video);
+
+        $usersAdmin = $this->getAdminUsers();
+        $usersAdmin->each->notify(new \App\Notifications\VideoProcessedNotification($this->video));
     }
 
     public function failed(\Throwable $exception)
     {
-        $user = \App\Models\User::first(); //To-DO: Pegar os usuarios com papel ADMIN
-        $user->notify(new \App\Notifications\WhenVideoProcessingHasFailedNotification($this->video, $exception));
+        $usersAdmin = $this->getAdminUsers();
+        $usersAdmin->each->notify(new \App\Notifications\WhenVideoProcessingHasFailedNotification($this->video, $exception));
+    }
+
+    private function getAdminUsers()
+    {
+        return User::whereRole('ROLE_ADMIN')->get(); //retornado uma collection de users model
     }
 }
